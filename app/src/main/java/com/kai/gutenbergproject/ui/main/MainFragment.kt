@@ -26,7 +26,7 @@ class MainFragment : Fragment()
 
     private lateinit var mRecyclerView: RecyclerView
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var mMainViewModel: MainViewModel
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View
     {
@@ -44,9 +44,9 @@ class MainFragment : Fragment()
     override fun onActivityCreated( savedInstanceState: Bundle? )
     {
         super.onActivityCreated( savedInstanceState )
-        viewModel = ViewModelProvider(this).get( MainViewModel::class.java )
+        mMainViewModel = ViewModelProvider(this).get( MainViewModel::class.java )
         ( activity as AppCompatActivity ).supportActionBar?.hide()
-        mRecyclerView.adapter = GenreAdapter( viewModel.getGenreList() )
+        mRecyclerView.adapter = GenreAdapter( mMainViewModel.getGenreList() )
         {
             onItemClick( it )
         }
