@@ -38,7 +38,7 @@ class BookListFragment : Fragment()
 
     private lateinit var mRecyclerView: RecyclerView
 
-    private lateinit var viewModel: BookListViewModel
+    private lateinit var mBookListViewModel: BookListViewModel
 
     private lateinit var mAdapter: BookAdapter
 
@@ -47,11 +47,38 @@ class BookListFragment : Fragment()
         return inflater.inflate( R.layout.book_list_fragment, container, false )
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle? )
+    {
+        super.onActivityCreated( savedInstanceState )
+        mBookListViewModel = ViewModelProvider(this ).get( BookListViewModel::class.java )
+        initializeRecyclerView()
+        initActionBar()
+        setHasOptionsMenu( true )
+        initializeEditTextChangeListener()
+        initializeOnTouchListener()
+        arguments?.getString( GENRE_ARGS )?.let {
+            GenreEnum.valueOf( it )
+        }?.let { loadData( it ) }
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        when ( item.itemId )
+        {
+            android.R.id.home->
+            {
+                findNavController().navigateUp()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun loadData(genreEnum: GenreEnum )
     {
-        viewModel.getBooksByCategory( genreEnum )
+        mBookListViewModel.getBooksByCategory( genreEnum )
         activity?.let { fragmentActivity ->
-            viewModel.getBookList().observe(fragmentActivity, Observer { bookList ->
+            mBookListViewModel.getBookList().observe(fragmentActivity, Observer { bookList ->
                 if (bookList != null) {
                     progressVisibility(View.GONE)
                     Log.d("temp", "loadData: " + bookList.size )
@@ -96,22 +123,7 @@ class BookListFragment : Fragment()
 
     private fun shouldPerformViewAction( result: Result ): String
     {
-        return viewModel.canFileBeViewed( result )
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle? )
-    {
-        super.onActivityCreated( savedInstanceState )
-        viewModel = ViewModelProvider(this ).get( BookListViewModel::class.java )
-        initializeRecyclerView()
-        initActionBar()
-        setHasOptionsMenu( true )
-        initializeEditTextChangeListener()
-        initializeOnTouchListener()
-        arguments?.getString( GENRE_ARGS )?.let {
-            GenreEnum.valueOf( it )
-        }?.let { loadData( it ) }
-
+        return mBookListViewModel.canFileBeViewed( result )
     }
 
     private fun initializeRecyclerView()
@@ -155,7 +167,7 @@ class BookListFragment : Fragment()
                         override fun run() {
                             if (System.currentTimeMillis() - lastChange >= 300) {
                                 progressVisibility(View.VISIBLE)
-                                viewModel.getBooksByQuery(s.toString())
+                                mBookListViewModel.getBooksByQuery(s.toString())
                             }
                         }
                     }, 300 )
@@ -184,18 +196,6 @@ class BookListFragment : Fragment()
         (activity as AppCompatActivity).supportActionBar?.title = arguments?.getString(GENRE_ARGS)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean
-    {
-        when ( item.itemId )
-        {
-            android.R.id.home->
-            {
-                findNavController().navigateUp()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
 
