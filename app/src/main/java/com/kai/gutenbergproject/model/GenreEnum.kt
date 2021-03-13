@@ -1,6 +1,6 @@
 package com.kai.gutenbergproject.model
 
-enum class CategoryEnum( description: String )
+enum class GenreEnum(description: String )
 {
     FICTION("fiction"),
     DRAMA( "drama"),

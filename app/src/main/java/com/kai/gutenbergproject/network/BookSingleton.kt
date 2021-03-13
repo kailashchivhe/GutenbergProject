@@ -1,6 +1,6 @@
 package com.kai.gutenbergproject.network
 
-import com.kai.gutenbergproject.model.CategoryEnum
+import com.kai.gutenbergproject.model.GenreEnum
 import com.kai.gutenbergproject.model.Gutenberg
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -10,7 +10,7 @@ object BookSingleton
 {
     private const val mBaseURL = "https://gutendex.com/"
 
-    lateinit var mCurrentCategoryEnum: CategoryEnum
+    lateinit var mCurrentGenreEnum: GenreEnum
 
     private val mRetrofit: Retrofit = Retrofit.Builder()
         .baseUrl( mBaseURL )
@@ -19,13 +19,13 @@ object BookSingleton
 
     private val mBookServiceInterface = mRetrofit.create( BookServiceInterface::class.java )
 
-    fun getBooksByCategory( categoryEnum: CategoryEnum, callback: Callback<Gutenberg> )
+    fun getBooksByCategory(genreEnum: GenreEnum, callback: Callback<Gutenberg> )
     {
-        mBookServiceInterface.getBooksByCategory( categoryEnum.name ).enqueue( callback )
+        mBookServiceInterface.getBooksByCategory( genreEnum.name ).enqueue( callback )
     }
 
     fun getBooksByQuery( query: String, callback: Callback<Gutenberg> )
     {
-        mBookServiceInterface.getBooksByQuery( mCurrentCategoryEnum.name, query ).enqueue( callback )
+        mBookServiceInterface.getBooksByQuery( mCurrentGenreEnum.name, query ).enqueue( callback )
     }
 }

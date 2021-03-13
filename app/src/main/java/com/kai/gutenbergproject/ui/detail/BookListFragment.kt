@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kai.gutenbergproject.MainActivity.Companion.GENRE_ARGS
 import com.kai.gutenbergproject.R
-import com.kai.gutenbergproject.model.CategoryEnum
+import com.kai.gutenbergproject.model.GenreEnum
 import com.kai.gutenbergproject.model.Result
 import com.kai.gutenbergproject.ui.adapter.BookAdapter
 import kotlinx.android.synthetic.main.book_list_fragment.*
@@ -44,9 +44,9 @@ class BookListFragment : Fragment()
         return inflater.inflate( R.layout.book_list_fragment, container, false )
     }
 
-    private fun loadData( categoryEnum: CategoryEnum )
+    private fun loadData(genreEnum: GenreEnum )
     {
-        viewModel.getBooksByCategory( categoryEnum )
+        viewModel.getBooksByCategory( genreEnum )
         activity?.let { fragmentActivity ->
             viewModel.getBookList().observe(fragmentActivity, Observer { bookList ->
                 if (bookList != null) {
@@ -81,7 +81,7 @@ class BookListFragment : Fragment()
         initializeEditTextChangeListener()
         initializeOnTouchListener()
         arguments?.getString( GENRE_ARGS )?.let {
-            CategoryEnum.valueOf( it )
+            GenreEnum.valueOf( it )
         }?.let { loadData( it ) }
 
     }

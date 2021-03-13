@@ -3,7 +3,7 @@ package com.kai.gutenbergproject.ui.detail
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kai.gutenbergproject.model.CategoryEnum
+import com.kai.gutenbergproject.model.GenreEnum
 import com.kai.gutenbergproject.model.Gutenberg
 import com.kai.gutenbergproject.model.Result
 import com.kai.gutenbergproject.network.BookSingleton
@@ -20,11 +20,11 @@ class BookListViewModel : ViewModel() {
 
     private var mBookList = MutableLiveData<MutableList<Result>>()
 
-    fun getBooksByCategory( categoryEnum: CategoryEnum )
+    fun getBooksByCategory(genreEnum: GenreEnum )
     {
-        BookSingleton.mCurrentCategoryEnum = categoryEnum
+        BookSingleton.mCurrentGenreEnum = genreEnum
         BookSingleton.getBooksByCategory(
-            categoryEnum,
+            genreEnum,
             object : retrofit2.Callback<Gutenberg>
             {
                 override fun onResponse( call: Call<Gutenberg>, response: Response<Gutenberg> )
