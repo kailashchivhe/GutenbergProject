@@ -3,4 +3,6 @@
     <string name="tag_line">A social cataloging website that allows you to freely search its database of books, annotations, and reviews.</string>
     <string name="search">Search</string>
     <string name="failure_toast">Failed to load data.</string>
+    <string name="dialogTitle">Invalid Format</string>
+    <string name="dialogMessage">Requested book does not support available file formats. Please try later.</string>
 </resources>

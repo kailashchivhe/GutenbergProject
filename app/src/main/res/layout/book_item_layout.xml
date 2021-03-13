@@ -23,7 +23,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_view_image_height"
-            android:src="@drawable/default_book_image"
+            android:src="@drawable/book"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"

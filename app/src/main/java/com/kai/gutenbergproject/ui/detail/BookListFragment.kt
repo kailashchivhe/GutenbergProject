@@ -2,6 +2,9 @@ package com.kai.gutenbergproject.ui.detail
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -68,7 +71,32 @@ class BookListFragment : Fragment()
 
     private fun onItemClick( result: Result )
     {
+        val uri = shouldPerformViewAction( result )
+        if( uri.isNotEmpty() )
+        {
+            val intent = Intent( Intent.ACTION_VIEW, Uri.parse( uri ) )
+            startActivity( intent )
+        }
+        else
+        {
+            showInvalidFormatDialog()
+        }
+    }
 
+    private fun showInvalidFormatDialog()
+    {
+        val builder = AlertDialog.Builder( context )
+        builder.setTitle( R.string.dialogTitle )
+        builder.setMessage( R.string.dialogMessage )
+        builder.setIcon( android.R.drawable.ic_dialog_alert )
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable( true )
+        alertDialog.show()
+    }
+
+    private fun shouldPerformViewAction( result: Result ): String
+    {
+        return viewModel.canFileBeViewed( result )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle? )

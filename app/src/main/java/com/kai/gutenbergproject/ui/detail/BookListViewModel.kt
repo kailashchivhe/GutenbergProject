@@ -65,4 +65,20 @@ class BookListViewModel : ViewModel() {
                 }
             } )
     }
+
+    fun canFileBeViewed( result: Result ): String
+    {
+        return when {
+            result.formats.textHtmlCharsetIso88591Format != null -> {
+                result.formats.textHtmlCharsetIso88591Format;
+            }
+            result.formats.pdfFormat != null -> {
+                result.formats.pdfFormat
+            }
+            result.formats.textPlainFormat != null -> {
+                result.formats.textPlainFormat
+            }
+            else -> ""
+        }
+    }
 }
