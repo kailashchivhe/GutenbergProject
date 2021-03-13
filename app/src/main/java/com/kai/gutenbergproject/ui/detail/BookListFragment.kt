@@ -1,16 +1,29 @@
 package com.kai.gutenbergproject.ui.detail
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kai.gutenbergproject.MainActivity.Companion.GENRE_ARGS
 import com.kai.gutenbergproject.R
+import com.kai.gutenbergproject.model.CategoryEnum
+import com.kai.gutenbergproject.model.Result
+import com.kai.gutenbergproject.ui.adapter.BookAdapter
+import kotlinx.android.synthetic.main.book_list_fragment.*
 
 
 class BookListFragment : Fragment()
@@ -20,19 +33,121 @@ class BookListFragment : Fragment()
         fun newInstance() = BookListFragment()
     }
 
+    private lateinit var mRecyclerView: RecyclerView
+
     private lateinit var viewModel: BookListViewModel
+
+    private lateinit var mAdapter: BookAdapter
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View?
     {
         return inflater.inflate( R.layout.book_list_fragment, container, false )
     }
 
-    override fun onActivityCreated( savedInstanceState: Bundle? )
+    private fun loadData( categoryEnum: CategoryEnum )
+    {
+        viewModel.getBooksByCategory( categoryEnum )
+        activity?.let { fragmentActivity ->
+            viewModel.getBookList().observe(fragmentActivity, Observer { bookList ->
+                if (bookList != null) {
+                    progressVisibility(View.GONE)
+                    Log.d("temp", "loadData: " + bookList.size )
+                    mAdapter.setData(bookList)
+                    mAdapter.notifyDataSetChanged()
+                } else {
+                    showFailureToast();
+                }
+            })
+        }
+    }
+
+    private fun showFailureToast()
+    {
+        Toast.makeText( context, R.string.failure_toast, Toast.LENGTH_LONG ).show()
+    }
+
+    private fun onItemClick( result: Result )
+    {
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle? )
     {
         super.onActivityCreated( savedInstanceState )
-        viewModel = ViewModelProvider(this).get( BookListViewModel::class.java )
+        viewModel = ViewModelProvider(this ).get( BookListViewModel::class.java )
+        initializeRecyclerView()
         initActionBar()
         setHasOptionsMenu( true )
+        initializeEditTextChangeListener()
+        initializeOnTouchListener()
+        arguments?.getString( GENRE_ARGS )?.let {
+            CategoryEnum.valueOf( it )
+        }?.let { loadData( it ) }
+
+    }
+
+    private fun initializeRecyclerView()
+    {
+        mRecyclerView = recycler_view
+        mRecyclerView.layoutManager = GridLayoutManager( activity, 3, LinearLayoutManager.VERTICAL, false)
+        mAdapter = BookAdapter(mutableListOf()) {
+            onItemClick(it)
+        }
+        mRecyclerView.adapter = mAdapter
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initializeOnTouchListener()
+    {
+        mRecyclerView.setOnTouchListener { v, event ->
+            edit_text.clearFocus()
+            val inputMethodManager =
+                activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+            false
+        }
+    }
+
+    private fun initializeEditTextChangeListener()
+    {
+        var lastChange: Long = 0
+        edit_text.addTextChangedListener( object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
+            {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+            {
+            }
+
+            override fun afterTextChanged(s: Editable?)
+            {
+                if( s.toString().length > 1 ) {
+                    Handler().postDelayed( object : Runnable {
+                        override fun run() {
+                            if (System.currentTimeMillis() - lastChange >= 300) {
+                                progressVisibility(View.VISIBLE)
+                                viewModel.getBooksByQuery(s.toString())
+                            }
+                        }
+                    }, 300 )
+                }
+            }
+        })
+    }
+
+    private fun progressVisibility( visibility: Int )
+    {
+        if( visibility == View.GONE )
+        {
+            progressBar.visibility = visibility
+            recycler_view.visibility = View.VISIBLE
+        }
+        else
+        {
+            progressBar.visibility = visibility
+            recycler_view.visibility = View.GONE
+        }
     }
 
     private fun initActionBar()
@@ -55,3 +170,4 @@ class BookListFragment : Fragment()
         return super.onOptionsItemSelected(item)
     }
 }
+

@@ -8,9 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object BookSingleton
 {
-    private const val mBaseURL = "http://skunkworks.ignitesol.com:8000/"
+    private const val mBaseURL = "https://gutendex.com/"
 
-    private lateinit var mCurrentCategoryEnum: CategoryEnum
+    lateinit var mCurrentCategoryEnum: CategoryEnum
 
     private val mRetrofit: Retrofit = Retrofit.Builder()
         .baseUrl( mBaseURL )

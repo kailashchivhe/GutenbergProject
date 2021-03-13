@@ -23,9 +23,23 @@
         android:textCursorDrawable="@drawable/cursor_drawable"
         android:drawablePadding="@dimen/generic_padding" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <RelativeLayout
         android:background="@color/grey_light"
-        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="@color/grey_light"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 </LinearLayout>

@@ -7,7 +7,6 @@ import com.kai.gutenbergproject.model.GenreItem
 
 class MainViewModel : ViewModel()
 {
-    // TODO: Implement the ViewModel
     companion object
     {
         const val TAG = "MainViewModel"

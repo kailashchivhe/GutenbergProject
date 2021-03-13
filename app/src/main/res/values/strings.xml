@@ -2,4 +2,5 @@
     <string name="app_name">Gutenberg Project</string>
     <string name="tag_line">A social cataloging website that allows you to freely search its database of books, annotations, and reviews.</string>
     <string name="search">Search</string>
+    <string name="failure_toast">Failed to load data.</string>
 </resources>
