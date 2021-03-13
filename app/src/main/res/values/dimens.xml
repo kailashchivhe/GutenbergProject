@@ -14,4 +14,6 @@
     <dimen name="card_view_image_height">162dp</dimen>
     <dimen name="card_view_width">114dp</dimen>
     <dimen name="card_view_corner_radius">8dp</dimen>
+    <dimen name="progress_bar_height_width">50dp</dimen>
+    <dimen name="edit_text_padding">16dp</dimen>
 </resources>
