@@ -17,6 +17,7 @@
         android:hint="@string/search"
         android:background="@drawable/rounded_edit_text_drawable"
         android:drawableStart="@drawable/ic_search"
+        android:layout_marginTop="@dimen/generic_padding"
         android:layout_marginStart="@dimen/generic_padding"
         android:layout_marginEnd="@dimen/generic_padding"
         android:layout_marginBottom="@dimen/generic_padding"
