@@ -1,2 +1,2 @@
 # GutenbergProject
-![](GutenberProject.gif)
+![](GutenbergProject.gif)
